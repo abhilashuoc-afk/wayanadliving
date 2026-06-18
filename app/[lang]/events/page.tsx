@@ -1,4 +1,6 @@
-const events = [
+import { getEvents } from "@/lib/sheets";
+
+const fallback = [
   { title: "Onam Grand Celebration", location: "Mananthavady", date: "Sep 5, 2026", emoji: "🎉", category: "Festival" },
   { title: "Weekend Trek - Chembra Peak", location: "Meppadi", date: "Jun 22, 2026", emoji: "🏔️", category: "Adventure" },
   { title: "Wayanad Food Festival", location: "Kalpetta", date: "Jul 4, 2026", emoji: "🍛", category: "Food" },
@@ -9,6 +11,18 @@ const events = [
 
 export default async function EventsPage({ params }: { params: Promise<{ lang: string }> }) {
   await params;
+  const raw = await getEvents();
+
+  const events = raw.length > 0
+    ? raw.map((e) => ({
+        title: e.title || "",
+        location: e.location || "Wayanad",
+        date: e.date || "",
+        emoji: e.emoji || "📅",
+        category: e.category || "Event",
+      }))
+    : fallback;
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-semibold text-gray-800 border-l-4 border-orange-500 pl-3 mb-6">
