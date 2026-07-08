@@ -2,17 +2,17 @@ import Link from "next/link";
 import { getNews, getEvents } from "@/lib/sheets";
 
 const fallbackNews = [
-  { tag: "Top Story", title: "Wayanad landslide rehabilitation update", date: "June 18, 2026", image: "", slug: "wayanad-rehab", tagStyle: { background: "#0f2a45", color: "white" } },
-  { tag: "Tourism", title: "New eco-resort opens near Chembra Peak", date: "June 17, 2026", image: "", slug: "eco-resort", tagStyle: { color: "#f97316" } },
-  { tag: "Local", title: "Kalpetta bypass road construction begins", date: "June 16, 2026", image: "", slug: "kalpetta-bypass", tagStyle: { color: "#f97316" } },
-  { tag: "Agriculture", title: "Wayanad coffee growers get record prices", date: "June 15, 2026", image: "", slug: "coffee-prices", tagStyle: { color: "#22c55e" } },
+  { tag: "Top Story", title: "Wayanad landslide rehabilitation update", title_ml: "വയനാട് പുനരധിവാസ അപ്ഡേറ്റ്", date: "June 18, 2026", image: "", slug: "wayanad-rehab", tagStyle: { background: "#0f2a45", color: "white" } },
+  { tag: "Tourism", title: "New eco-resort opens near Chembra Peak", title_ml: "ചെമ്പ്ര പീക്കിന് സമീപം പുതിയ റിസോർട്ട്", date: "June 17, 2026", image: "", slug: "eco-resort", tagStyle: { color: "#f97316" } },
+  { tag: "Local", title: "Kalpetta bypass road construction begins", title_ml: "കൽപ്പറ്റ ബൈപ്പാസ് റോഡ് നിർമ്മാണം ആരംഭിച്ചു", date: "June 16, 2026", image: "", slug: "kalpetta-bypass", tagStyle: { color: "#f97316" } },
+  { tag: "Agriculture", title: "Wayanad coffee growers get record prices", title_ml: "വയനാട് കർഷകർക്ക് റെക്കോർഡ് വില", date: "June 15, 2026", image: "", slug: "coffee-prices", tagStyle: { color: "#22c55e" } },
 ];
 
 const fallbackEvents = [
-  { title: "Onam Grand Celebration", location: "Mananthavady", date: "Sep 5, 2026", emoji: "🎉" },
-  { title: "Weekend Trek - Chembra Peak", location: "Meppadi", date: "Jun 22, 2026", emoji: "🏔️" },
-  { title: "Wayanad Food Festival", location: "Kalpetta", date: "Jul 4, 2026", emoji: "🍛" },
-  { title: "Tribal Art Exhibition", location: "Sulthan Bathery", date: "Jul 15, 2026", emoji: "🎨" },
+  { title: "Onam Grand Celebration", title_ml: "ഓണം ആഘോഷം", location: "Mananthavady", date: "Sep 5, 2026", emoji: "🎉" },
+  { title: "Weekend Trek - Chembra Peak", title_ml: "ചെമ്പ്ര ട്രെക്ക്", location: "Meppadi", date: "Jun 22, 2026", emoji: "🏔️" },
+  { title: "Wayanad Food Festival", title_ml: "വയനാട് ഫുഡ് ഫെസ്റ്റിവൽ", location: "Kalpetta", date: "Jul 4, 2026", emoji: "🍛" },
+  { title: "Tribal Art Exhibition", title_ml: "ആദിവാസി കലാ പ്രദർശനം", location: "Sulthan Bathery", date: "Jul 15, 2026", emoji: "🎨" },
 ];
 
 export default async function NewsSection({ lang = "en" }: { lang: string }) {
@@ -22,6 +22,7 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
     ? rawNews.slice(0, 4).map((n) => ({
         tag: n.tag || "News",
         title: n.title || "",
+        title_ml: n.title_ml || "",
         date: n.date || "",
         image: n.image || "",
         slug: n.slug || n.title?.toLowerCase().replace(/\s+/g, "-") || "news",
@@ -34,6 +35,7 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
   const events = rawEvents.length > 0
     ? rawEvents.slice(0, 4).map((e) => ({
         title: e.title || "",
+        title_ml: e.title_ml || "",
         location: e.location || "Wayanad",
         date: e.date || "",
         emoji: e.emoji || "📅",
@@ -43,12 +45,14 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
   return (
     <section className="max-w-7xl mx-auto px-4 pb-10">
       <h2 className="text-xl font-semibold text-gray-800 border-l-4 border-orange-500 pl-3 mb-5">
-        Latest News
+        {lang === "ml" ? "ഏറ്റവും പുതിയ വാർത്ത" : "Latest News"}
       </h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         {/* Main news - 2/3 */}
         <div className="lg:col-span-2 space-y-4">
+
           {/* Featured big card */}
           <Link
             href={`/${lang}/news/${news[0].slug}`}
@@ -64,7 +68,7 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
                 {news[0].tag}
               </span>
               <h3 className="text-base font-semibold text-gray-800 mt-2 mb-1 leading-snug group-hover:text-orange-600 transition">
-                {news[0].title}
+                {lang === "ml" && news[0].title_ml ? news[0].title_ml : news[0].title}
               </h3>
               <p className="text-xs text-gray-400">{news[0].date}</p>
             </div>
@@ -86,7 +90,7 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
                 <div className="p-3">
                   <span style={item.tagStyle} className="text-xs font-semibold uppercase">{item.tag}</span>
                   <h4 className="text-sm font-medium text-gray-800 mt-1 leading-snug group-hover:text-orange-600 transition line-clamp-2">
-                    {item.title}
+                    {lang === "ml" && item.title_ml ? item.title_ml : item.title}
                   </h4>
                   <p className="text-xs text-gray-400 mt-1">{item.date}</p>
                 </div>
@@ -97,12 +101,15 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
 
         {/* Sidebar - 1/3 */}
         <div className="space-y-4">
+
           {/* Events widget */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div style={{ background: "#0f2a45" }} className="px-4 py-3 flex items-center justify-between">
-              <h3 className="text-white font-semibold text-sm">Upcoming Events</h3>
+              <h3 className="text-white font-semibold text-sm">
+                {lang === "ml" ? "വരാനിരിക്കുന്ന ഇവന്റുകൾ" : "Upcoming Events"}
+              </h3>
               <Link href={`/${lang}/events`} style={{ color: "#f97316" }} className="text-xs hover:underline">
-                View All
+                {lang === "ml" ? "എല്ലാം കാണൂ" : "View All"}
               </Link>
             </div>
             <div className="divide-y divide-gray-100">
@@ -110,7 +117,9 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
                 <div key={i} className="px-4 py-3 flex gap-3 items-start hover:bg-gray-50 transition cursor-pointer">
                   <div className="text-2xl">{ev.emoji}</div>
                   <div>
-                    <p className="text-sm font-medium text-gray-800 leading-snug">{ev.title}</p>
+                    <p className="text-sm font-medium text-gray-800 leading-snug">
+                      {lang === "ml" && ev.title_ml ? ev.title_ml : ev.title}
+                    </p>
                     <p className="text-xs text-gray-500 mt-0.5">📍 {ev.location}</p>
                     <p className="text-xs text-gray-400">{ev.date}</p>
                   </div>
@@ -122,17 +131,21 @@ export default async function NewsSection({ lang = "en" }: { lang: string }) {
           {/* Stats widget */}
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div style={{ background: "#0f2a45" }} className="px-4 py-3">
-              <h3 className="text-white font-semibold text-sm">Wayanad Highlights</h3>
+              <h3 className="text-white font-semibold text-sm">
+                {lang === "ml" ? "വയനാട് ഹൈലൈറ്റ്സ്" : "Wayanad Highlights"}
+              </h3>
             </div>
             <div className="p-4 space-y-2">
               {[
-                { label: "Active Resorts", value: "240+" },
-                { label: "Properties Listed", value: "1,200+" },
-                { label: "Daily Visitors", value: "8,500+" },
-                { label: "Local Businesses", value: "3,000+" },
+                { label: "Active Resorts", label_ml: "സജീവ റിസോർട്ടുകൾ", value: "240+" },
+                { label: "Properties Listed", label_ml: "പ്രോപ്പർട്ടികൾ", value: "1,200+" },
+                { label: "Daily Visitors", label_ml: "ദൈനംദിന സന്ദർശകർ", value: "8,500+" },
+                { label: "Local Businesses", label_ml: "പ്രാദേശിക ബിസിനസ്", value: "3,000+" },
               ].map((stat) => (
                 <div key={stat.label} className="flex justify-between items-center text-sm">
-                  <span className="text-gray-500">{stat.label}</span>
+                  <span className="text-gray-500">
+                    {lang === "ml" ? stat.label_ml : stat.label}
+                  </span>
                   <span style={{ color: "#f97316" }} className="font-bold">{stat.value}</span>
                 </div>
               ))}
